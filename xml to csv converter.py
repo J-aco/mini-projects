@@ -15,8 +15,13 @@ class XMLConverter(QWidget):
         self.folder_path_edit = QLineEdit()
         self.analyse_button = QPushButton("Analyse")
         self.analyse_button.clicked.connect(self.analyse_data)
+
+        # Status Text
         self.status_text = QLabel("Waiting for folder path")
         self.sub_status_text = QLabel("")
+        self.final_status_text = QLabel("")
+        
+        #analysis variables
         self.columns = []
         self.checkboxes=[]
         
@@ -26,7 +31,7 @@ class XMLConverter(QWidget):
         self.layout.addWidget(self.sub_status_text)
         self.layout.addWidget(self.folder_path_edit)
         self.layout.addWidget(self.analyse_button)
-        
+        self.layout.addWidget(self.final_status_text)
 
 
         self.setLayout(self.layout)
@@ -107,7 +112,7 @@ class XMLConverter(QWidget):
                         writer.writerow(data)
             self.status_text.setText(f"Converted {current_file} of {num_files}")
             self.sub_status_text.setText("")
-            self.layout.addWidget(QLabel("Done!"))
+            self.final_status_text.setText("Done!")
 # Create an instance of the GUI and show it
 app = QApplication([])
 window = XMLConverter()
