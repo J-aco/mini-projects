@@ -1,7 +1,10 @@
+# Code to have a GUI that allows the user to select the columns to include in the CSV file.
+# The code is incomplete and does not work.
+
 import xml.etree.ElementTree as Xet
 import csv
 import os
-from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QLineEdit, QCheckBox, QLabel
+from PySide6.QtWidgets import QMainWindow, QApplication, QWidget, QPushButton, QVBoxLayout, QLineEdit, QCheckBox, QLabel, QScrollArea
 
 class XMLConverter(QWidget):
     def __init__(self):
@@ -33,8 +36,9 @@ class XMLConverter(QWidget):
         self.layout.addWidget(self.analyse_button)
         self.layout.addWidget(self.final_status_text)
 
-
+        # Set the layout of the window
         self.setLayout(self.layout)
+
 
     def analyse_data(self):
         # Parse one of the XML files to determine the columns that exist
@@ -46,19 +50,19 @@ class XMLConverter(QWidget):
         root = xmlparse.getroot()
 
         # Create a list of the columns to include in the CSV file
-        self.columns.append(root.tag)
-        for child in root:
-            if child.tag not in self.columns:
-                self.columns.append(child.tag)
-            for subchild in child:
-                if subchild.tag not in self.columns:
-                    self.columns.append(subchild.tag)
+        fields = [
+            {
+                'name': field.get('name'),
+                'value': field.text
+            }
+        for field in root.findall('.//field')
+        ]
+        self.columns = [str(field['name']) for field in fields]
         
-        
-        for column in self.columns:
-            checkbox = QCheckBox(column)
-            self.checkboxes.append(checkbox)
-            self.layout.addWidget(checkbox)
+        # for column in self.columns:
+        #     checkbox = QCheckBox(column)
+        #     self.checkboxes.append(checkbox)
+        #     self.layout.addWidget(checkbox)
 
         self.layout.addWidget(self.convert_button)
         self.status_text.setText("Select the columns to include in the CSV file")
@@ -74,10 +78,10 @@ class XMLConverter(QWidget):
         file_names = os.listdir(folder_path)
 
         # Create a list of the selected columns
-        selected_columns = []
-        for i, checkbox in enumerate(self.checkboxes):
-            if checkbox.isChecked():
-                selected_columns.append(self.columns[i])
+        selected_columns = self.columns
+        # for i, checkbox in enumerate(self.checkboxes):
+        #     if checkbox.isChecked():
+        #         selected_columns.append(self.columns[i])
 
         with open('output.csv', 'w', newline='') as csvfile:
             # Create a DictWriter object to write the data to the CSV file
@@ -86,7 +90,6 @@ class XMLConverter(QWidget):
             num_files = len(file_names)
             current_file = 0
             current_file_name = ""
-            current_column = ""
             for file_name in file_names:
                 current_file += 1
                 current_file_name = file_name
@@ -107,7 +110,9 @@ class XMLConverter(QWidget):
                             if element is not None:
                             # If the element exists, add its text to the data dictionary
                                 data[column] = element.text
-  
+                            else:
+                                # If the element doesn't exist, add an empty string to the data dictionary
+                                data[column] = ""
                         # Write the dictionary to the CSV file
                         writer.writerow(data)
             self.status_text.setText(f"Converted {current_file} of {num_files}")
