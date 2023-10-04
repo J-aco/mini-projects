@@ -1,5 +1,6 @@
 # Code to have a GUI that allows the user to select the columns to include in the CSV file.
 # The code is incomplete and does not work.
+# *AI CODE* This code is the result of just throwing the non-gui script into chatgpt.
 
 import xml.etree.ElementTree as Xet
 import csv
