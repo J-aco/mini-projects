@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
 
+# Insert Tinyfy API key below.
 APIKEY = ""
 tinify.key = APIKEY
 
