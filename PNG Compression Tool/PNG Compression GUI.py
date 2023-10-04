@@ -11,10 +11,11 @@ tinify.key = APIKEY
 def compress_image():
     input_file = input_file_entry.get()
     output_file = output_file_entry.get()
-
+    
     # Create a loading screen window
     loading_window = tk.Toplevel(root)
-    loading_window.title("In Progess")
+    loading_window.title("Loading")
+
     loading_label = tk.Label(loading_window, text="Compressing...")
     loading_label.pack()
 
@@ -22,25 +23,31 @@ def compress_image():
         try:
             source = tinify.from_file(input_file)
             source.to_file(output_file)
+            # print("Success")
             loading_window.destroy()
             messagebox.showinfo("Success", "Image compression successful!")
+            
         except Exception as e:
+            # print("Error: "+ str(e))
             loading_window.destroy()
             messagebox.showerror("Error", str(e))
+            
 
     # Create a thread for the compression process
     compression_thread = threading.Thread(target=compression_thread)
     compression_thread.start()
 
 def browse_input_file():
-    file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp *.tiff")])
+    file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png *.jpg *.webp")])
     input_file_entry.delete(0, tk.END)
     input_file_entry.insert(0, file_path)
+    print("Input File added")
 
 def browse_output_file():
-    file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
+    file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("Image files", "*.png *.jpg *.webp"),("PNG", "*.png"),("JPG", "*.jpg"),("WEBP", "*.webp")])
     output_file_entry.delete(0, tk.END)
     output_file_entry.insert(0, file_path)
+    print("Output file added")
 
 # Create a GUI window
 root = tk.Tk()
