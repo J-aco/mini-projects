@@ -2,6 +2,7 @@ import tinify
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import messagebox
+import threading
 
 # Insert Tinyfy API key below.
 APIKEY = ""
@@ -11,12 +12,25 @@ def compress_image():
     input_file = input_file_entry.get()
     output_file = output_file_entry.get()
 
-    try:
-        source = tinify.from_file(input_file)
-        source.to_file(output_file)
-        messagebox.showinfo("Success", "Image compression successful!")
-    except Exception as e:
-        messagebox.showerror("Error", str(e))
+    # Create a loading screen window
+    loading_window = tk.Toplevel(root)
+    loading_window.title("In Progess")
+    loading_label = tk.Label(loading_window, text="Compressing...")
+    loading_label.pack()
+
+    def compression_thread():
+        try:
+            source = tinify.from_file(input_file)
+            source.to_file(output_file)
+            loading_window.destroy()
+            messagebox.showinfo("Success", "Image compression successful!")
+        except Exception as e:
+            loading_window.destroy()
+            messagebox.showerror("Error", str(e))
+
+    # Create a thread for the compression process
+    compression_thread = threading.Thread(target=compression_thread)
+    compression_thread.start()
 
 def browse_input_file():
     file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp *.tiff")])
