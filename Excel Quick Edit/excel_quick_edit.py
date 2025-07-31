@@ -11,13 +11,15 @@ file_extension = ""
 current_theme = "dark"
 
 # === Themes ===
+#
 light_theme = {
     "bg": "#ffffff",
     "fg": "#000000",
     "entry_bg": "#ffffff",
     "entry_fg": "#000000",
     "button_bg": "#f0f0f0",
-    "label_bg": "#e0e0e0"
+    "label_bg": "#e0e0e0",
+    "info_bg": "#000000"
 }
 
 dark_theme = {
@@ -85,9 +87,9 @@ def open_file(file_path):
 
     try:
         if file_extension == ".csv":
-            df = pd.read_csv(file_path, header=None).fillna(0)
+            df = pd.read_csv(file_path, header=None).fillna("")
         elif file_extension == ".xlsx":
-            df = pd.read_excel(file_path, header=None).fillna(0)
+            df = pd.read_excel(file_path, engine="openpyxl", header=None).fillna("")
         else:
             message_label.config(text="Unsupported file type.")
             return
@@ -267,7 +269,7 @@ def get_updated_data():
 def add_row():
     updated_df = get_updated_data()
     if updated_df is not None:
-        new_row = [0] * display_data.num_cols
+        new_row = [""] * display_data.num_cols
         updated_df.loc[len(updated_df)] = new_row
         push_undo("Add Row")
         display_data(updated_df)
@@ -276,7 +278,7 @@ def add_row():
 def add_column():
     updated_df = get_updated_data()
     if updated_df is not None:
-        updated_df[len(updated_df.columns)] = 0
+        updated_df[len(updated_df.columns)] = ""
         push_undo("Add Column")
         display_data(updated_df)
 
