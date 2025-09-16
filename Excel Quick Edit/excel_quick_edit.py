@@ -11,7 +11,7 @@ file_extension = ""
 current_theme = "dark"
 
 # === Themes ===
-#
+
 light_theme = {
     "bg": "#ffffff",
     "fg": "#000000",
@@ -19,7 +19,8 @@ light_theme = {
     "entry_fg": "#000000",
     "button_bg": "#f0f0f0",
     "label_bg": "#e0e0e0",
-    "info_bg": "#000000"
+    "info_bg": "#000000",
+    "info_fg": "#ffffff"
 }
 
 dark_theme = {
@@ -29,7 +30,8 @@ dark_theme = {
     "entry_fg": "#ffffff",
     "button_bg": "#444444",
     "label_bg": "#3c3c3c",
-    "info_bg": "#000000"
+    "info_bg": "#000000",
+    "info_fg": "#ffffff"
 }
 
 def configure_theme():
@@ -42,7 +44,7 @@ def configure_theme():
     canvas.configure(bg=theme["bg"])
     table_frame.configure(bg=theme["bg"])
     table_inner_frame.configure(bg=theme["bg"])
-    message_label.configure(bg=theme["info_bg"])
+    message_label.configure(bg=theme["info_bg"], fg=theme["info_fg"])
 
     for widget in top_controls.winfo_children():
         widget.configure(bg=theme["button_bg"], fg=theme["fg"])
@@ -419,8 +421,7 @@ canvas.bind_all("<Button-5>", lambda e: canvas.yview_scroll(1, "units"))
 app.bind("<Control-z>", undo_last_action)
 app.bind("<Control-y>", redo_last_action)
 
-# === Message Label ===
-
+# === Bottom Message Label ===
 message_label = tk.Label(app, text="",height=1)
 message_label.pack(side=tk.RIGHT, fill=tk.X, expand=True)
 
